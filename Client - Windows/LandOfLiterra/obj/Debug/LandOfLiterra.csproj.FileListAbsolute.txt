@@ -13,7 +13,7 @@ C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandO
 C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\bin\Debug\LandOfLiterra.exe
 C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\bin\Debug\LandOfLiterra.pdb
 C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.csprojResolveAssemblyReference.cache
-C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.Form1.resources
 C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.Properties.Resources.resources
 C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.csproj.GenerateResource.Cache
-C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.Form2.resources
+C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.MainForm.resources
+C:\Users\johan\Documents\GitHubVisualStudio\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.LogInForm.resources

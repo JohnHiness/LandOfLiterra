@@ -10,17 +10,17 @@ using System.Windows.Forms;
 
 namespace LandOfLiterra
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         bool loggedIn = false;
         public void startup()
         {
             
         }
-        public Form1()
+        public MainForm()
         {
             // string promptValue = LogIn.ShowDialog("Test", "Test2");
-            Form2 loginForm = new Form2();
+            LogInForm loginForm = new LogInForm();
             loginForm.ShowDialog();
             if (loggedIn == false) { Application.Exit(); Environment.Exit(1); }
             InitializeComponent();
