@@ -9,8 +9,8 @@ There will be multiple servers clients can connect to, and serverlists are downl
 ##### Game
 The game itself will feature a large map with many quests, items, buildings, arenas, and other entities. Players will be interactable with eachother, not just by chat but also "physically". If any player afflict the world in any way, the changes will be for all other players too. Think of an Elder Scrolls game - textbased and online.
 
-###### Duals and PvP
-There will be two ways to fighting. The reason for this is because the first way can easily become unfair due to multiple factors. The first way being that, say in order to attack an opponent, one would write "use sword on player". But seeing this will be bad for people with high ping and slow type-speed, a second option was needed without removing the first one being intense and making the game more exiting.
+###### Duels and PvP
+There will be two ways to fight in this game. The reason for this is because the first way can easily become unfair due to multiple factors. The first way being that, say in order to attack an opponent, one would write "use sword on player". But seeing this will be bad for people with high ping and slow type-speed, a second option was needed without removing the first one being intense and making the game more exiting.
 The second way of fighting will be simply turnbased. This way, one can have a fair fight(..if we disregard any random-factors in e.g. damagemultipliers).
 
 ###### Map
