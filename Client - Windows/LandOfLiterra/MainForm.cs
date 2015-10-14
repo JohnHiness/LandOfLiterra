@@ -8,17 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace LandOfLiterra
-{
-    public partial class MainForm : Form
-    {
-        bool loggedIn = false;
-        public void startup()
-        {
-            
+namespace LandOfLiterra {
+    public partial class MainForm : Form {
+        public void startup() {
+
         }
-        public MainForm()
-        {
+        public MainForm() {
             // string promptValue = LogIn.ShowDialog("Test", "Test2");
             LogInForm loginForm = new LogInForm();
             loginForm.ShowDialog();
@@ -26,14 +21,11 @@ namespace LandOfLiterra
             InitializeComponent();
         }
 
-        private void checkDev_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkDev.Checked)
-            {
+        private void checkDev_CheckedChanged(object sender, EventArgs e) {
+            if (checkDev.Checked) {
                 this.ClientSize = new System.Drawing.Size(1125, 560);
             }
-            else
-            {
+            else {
                 this.ClientSize = new System.Drawing.Size(605, 560);
             }
         }

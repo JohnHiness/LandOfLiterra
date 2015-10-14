@@ -49,6 +49,7 @@
             this.inUsr.Name = "inUsr";
             this.inUsr.Size = new System.Drawing.Size(322, 26);
             this.inUsr.TabIndex = 0;
+            this.inUsr.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxKeyUp);
             // 
             // lblTitle
             // 
@@ -79,6 +80,7 @@
             this.inPass.PasswordChar = '•';
             this.inPass.Size = new System.Drawing.Size(322, 26);
             this.inPass.TabIndex = 6;
+            this.inPass.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxKeyUp);
             // 
             // label2
             // 
@@ -145,9 +147,11 @@
             this.overBox.TabIndex = 12;
             this.overBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.overBox.Visible = false;
+            this.overBox.TextChanged += new System.EventHandler(this.overBox_TextChanged);
             // 
             // boxDev
             // 
+            this.boxDev.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.boxDev.Location = new System.Drawing.Point(18, 406);
             this.boxDev.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.boxDev.Multiline = true;
@@ -156,6 +160,7 @@
             this.boxDev.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.boxDev.Size = new System.Drawing.Size(526, 438);
             this.boxDev.TabIndex = 13;
+            this.boxDev.WordWrap = false;
             // 
             // checkDev
             // 
@@ -187,7 +192,11 @@
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.inUsr);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "LogInForm";
+            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Land of Literra - Log in";
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -17,7 +17,7 @@ namespace LandOfLiterra {
         }
 
         public void writeDev(string text) {
-
+            boxDev.AppendText(text + Environment.NewLine);
         }
 
         private static string getLineFromString(string text, int lineWanted) {
@@ -61,25 +61,30 @@ namespace LandOfLiterra {
             //System.Threading.Thread.Sleep(2000);
            // await PutTaskDelay();
             putOver("Getting server list...");
-            string contents;
             string serverList_url = "http://files.landofliterra.com/serverlist";
+            writeDev("Getting server list from URL: " + serverList_url);
+            string contents;
             using (var wc = new System.Net.WebClient())
                 contents = wc.DownloadString(serverList_url);
             Main.globals.servers = new string[contents.Split('\n').Length][];
+            writeDev("#SERVERLIST START#");
+            writeDev(contents);
+            writeDev("#SERVERLIST END#");
             for (int i = 0; contents.Split('\n').Length > i; i++) {
                 string line = getLineFromString(contents, i);
                 if (line == "") { break; }
                 string name = line.Remove(line.IndexOf("|"));
                 string address = line.Substring(line.IndexOf("|") + 1, line.IndexOf(":") - line.IndexOf("|") - 1);
                 string port = line.Substring(line.IndexOf(":") + 1, line.IndexOf("%") - line.IndexOf(":") - 1);
-                boxDev.Text += Environment.NewLine + line;
-                boxDev.Text += Environment.NewLine + name;
-                boxDev.Text += Environment.NewLine + address;
-                boxDev.Text += Environment.NewLine + port;
+                //boxDev.Text += Environment.NewLine + line;
+                //boxDev.Text += Environment.NewLine + name;
+                //boxDev.Text += Environment.NewLine + address;
+                //boxDev.Text += Environment.NewLine + port;
                 Main.globals.servers[i] = new string[] { name, address, port };
-                boxDev.Text += Environment.NewLine + "============";
-                boxDev.Text += Convert.ToString(Main.globals.servers[i][2]);
+                //boxDev.Text += Environment.NewLine + "============";
+                //boxDev.Text += Convert.ToString(Main.globals.servers[i][2]);
                 serverList.Items.Add(name);
+                writeDev("Name of server #" + i + ": \"" + name + "\", address: " + address + ", port: " + port);
             }
             //System.Threading.Thread.Sleep(500);
             await PutTaskDelay();
@@ -92,12 +97,6 @@ namespace LandOfLiterra {
             InitializeComponent();
             System.Threading.Thread.Sleep(500);
             getServerList();
-        }
-
-        public void Form2_Shown(Object sender, EventArgs e) {
-            getServerList();
-            boxDev.Text += Environment.NewLine + "======333333333======";
-            boxDev.Text += Convert.ToString(Main.globals.servers[0][2]);
         }
 
         private void serverList_SelectedIndexChanged(object sender, EventArgs e) {
@@ -115,8 +114,22 @@ namespace LandOfLiterra {
 
         private void btnLogIn_Click(object sender, EventArgs e) {
             if (inUsr.Text == "" || inPass.Text == "") {
-                MessageBox.Show("Missing username and/or password.", "Literra - LogIn failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Missing username and/or password.", "Literra - Logln failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
+            writeDev("Attempting getting information from name in serverList.");
+            writeDev(Main.globals.servers[0][0]);
+            for (int i = 0; i < Main.globals.servers.Count() -1 ; i++) {
+                writeDev("object i: " + Convert.ToString(i));
+                writeDev("Count: " + Main.globals.servers.Count());
+                writeDev(Main.globals.servers[1][0]);
+                writeDev("Checking \"" + serverList.Text + "\" against \"" + Main.globals.servers[i][0] + "\"");
+                if (Main.globals.servers[i][0] == serverList.Text) {
+                    writeDev("Found selected name from serverList and aquired address: " + Main.globals.servers[i][1] + ":" + Main.globals.servers[i][2]);
+                    Main.globals.serverAddr = Main.globals.servers[i][1];
+                    Main.globals.serverPort = Convert.ToInt16(Main.globals.servers[i][2]);
+                    break;
+                } 
             }
         }
 
@@ -127,6 +140,22 @@ namespace LandOfLiterra {
             else {
                 this.ClientSize = new System.Drawing.Size(379, 249);
             }
+        }
+
+        private void overBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TextBoxKeyUp(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) {
+                btnLogIn_Click(sender, e);
+                e.Handled = true;
+            }
+        }
+
+        private void inPass_KeyPress(object sender, KeyPressEventArgs e) {
+
         }
     }
 }

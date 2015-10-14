@@ -8,7 +8,13 @@ namespace LandOfLiterra {
     class Main {
         public static class globals {
             public static bool loggedIn = false;
+            public static string serverAddr;
+            public static int serverPort;
             public static string[][] servers;
+        }
+
+        public static void serverConnect() {
+
         }
     }
 }
