@@ -1,5 +1,5 @@
 # Land of Literra
-A text-based online RPG. Written in Python and C#.
+A text-based online adventure role-playing game. Written in Python and C#.
 Originally an idea I had a long time ago, turned into a school project.
 
 ##### Technical
