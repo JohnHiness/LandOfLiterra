@@ -46,8 +46,20 @@ namespace LandOfLiterra {
             inPass.Enabled = true;
             btnLogIn.Enabled = true;
         }
+        async Task PutTaskDelay()
+        {
+            await Task.Delay(2000);
+        }
 
-        public void getServerList() {
+        private async void btnTaskDelay_Click(object sender, EventArgs e)
+        {
+            await PutTaskDelay();
+            MessageBox.Show("I am back");
+        }
+
+        public async void getServerList() {
+            //System.Threading.Thread.Sleep(2000);
+           // await PutTaskDelay();
             putOver("Getting server list...");
             string contents;
             string serverList_url = "http://files.landofliterra.com/serverlist";
@@ -70,6 +82,7 @@ namespace LandOfLiterra {
                 serverList.Items.Add(name);
             }
             //System.Threading.Thread.Sleep(500);
+            await PutTaskDelay();
             putDown();
             inUsr.Enabled = false;
             inPass.Enabled = false;
@@ -77,6 +90,8 @@ namespace LandOfLiterra {
         }
         public LogInForm() {
             InitializeComponent();
+            System.Threading.Thread.Sleep(500);
+            getServerList();
         }
 
         public void Form2_Shown(Object sender, EventArgs e) {
