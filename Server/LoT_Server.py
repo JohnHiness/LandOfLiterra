@@ -119,7 +119,7 @@ def clientThread(client, name):
 					attemptedPwd = emesg[emesg.find("|")+1:]
 					if not os.path.exists(accountListFilename):
 						send("popup|We apoplogize. Something has gone terribly wrong with the server and you won't be able to log in right now. Try again later.")
-						print "FATAL ERROR: LoT_Accounts.lot NOT FOUND! ALL AUTHORIZATIONS WILL BE AUTOMATICLY DENIED UNTIL FILE IS EXISTING!"
+						print "FATAL ERROR: \"" + accountListFilename + "\"-file NOT FOUND! ALL AUTHORIZATIONS WILL BE AUTOMATICLY DENIED UNTIL FILE IS EXISTING!"
 						cnsl("Attempted login with user \"" + attemptedUsr + "\" with client \"" + name + "\" denied.")
 						closeConnection()
 						break
