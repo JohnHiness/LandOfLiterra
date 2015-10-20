@@ -9,8 +9,8 @@ import random
 import ast
 import signal
 import threading
-__author__ = 'John Hiness'
 
+__author__ = 'John Hiness'
 
 dev = True
 
@@ -46,7 +46,7 @@ def startListen():
 	cnsl("Socket created.") """
 	try:
 		s.bind((host, port))
-	except socket.error , msg:
+	except socket.error, msg:
 		cnsl('Bind failed. Error code: ' + str(msg[0]) + ' Message ' + msg[1])
 		sys.exit()
 	cnsl("Socket bind successful on port " + str(port))
@@ -54,7 +54,7 @@ def startListen():
 
 
 try:
-	s = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 except socket.error, msg:
 	cnsl('Failed to create socket. Error code: ' + str(msg[0]) + ' , Error message : ' + msg[1])
 	sys.exit()
@@ -66,7 +66,7 @@ def readAccountList():
 	accList = []
 	count = 0
 	for line in accListFile.split("\n"):
-		count=count+1
+		count = count + 1
 		if line.find("#") != -1:
 			lineToAdd = line[:line.find("#")]
 		else:
@@ -76,7 +76,7 @@ def readAccountList():
 			break
 		if not lineToAdd == "":
 			list = lineToAdd.split("|")
-			accList.append({"usr":list[0].strip(), "pwd":list[1].strip()})
+			accList.append({"usr": list[0].strip(), "pwd": list[1].strip()})
 	return accList
 
 
@@ -93,6 +93,20 @@ def checkAuth(username, password, randomString, caseSens=False):
 					return True
 	return False
 
+# entities with id's displayed in map
+entities = {0000: {'desc': "air", 'walk': False},
+			0001: {'desc': "grass", 'walk': True},
+			0002: {'desc': "stone", 'walk': True},
+			0003: {'desc': "river", 'walk': False},
+			0005: {'desc': "sea", 'walk': False},
+			0006: {'desc': "wall", 'walk': False},
+			1001: {'desc': "path", 'walk': True},
+			1002: {'desc': "stone path", 'walk': True},
+			1003: {'desc': "grass path", 'walk': True},
+			1004: {'desc': "marble path", 'walk': True},
+			# .... dis gon take a while
+}
+
 
 def getUserInformation(user, writeOver=False):
 	userInfoFile = open(userInfoFilename, 'r').read()
@@ -102,6 +116,20 @@ def getUserInformation(user, writeOver=False):
 	if users[user] and not writeOver:
 		return False
 	users[user] = userList[user.lower()]
+
+
+class Player(object):
+	def __init__(self, username):
+		if not getUserInformation(username.lower()):
+			inv = []
+			hp = 0
+			xp = 0
+			pos = [0, 0]
+			event = 0
+			eventsDone = []
+			equped = []
+		else:
+			inv, hp, xp, pos, event, eventsDone, equiped = getUserInformation(username)
 
 
 def clientThread(client, name):
@@ -138,15 +166,16 @@ def clientThread(client, name):
 			rline = string.split(rline)
 			line = ' '.join(rline)
 			evnt = line[:line.find("|")]
-			emesg = line[line.find("|")+1:]
+			emesg = line[line.find("|") + 1:]
 			if dev:
 				cnsl("<<  " + name + ' :' + line)
 			if not loggedIn:
 				if evnt == "auth":
 					attemptedUsr = emesg[:emesg.find("|")]
-					attemptedPwd = emesg[emesg.find("|")+1:]
+					attemptedPwd = emesg[emesg.find("|") + 1:]
 					if not os.path.exists(accountListFilename):
-						send("popup|We apoplogize. Something has gone terribly wrong with the server and you won't be able to log in right now. Try again later.")
+						send(
+							"popup|We apoplogize. Something has gone terribly wrong with the server and you won't be able to log in right now. Try again later.")
 						print "FATAL ERROR: \"" + accountListFilename + "\"-file NOT FOUND! ALL AUTHORIZATIONS WILL BE AUTOMATICLY DENIED UNTIL FILE IS EXISTING!"
 						cnsl("Attempted login with user \"" + attemptedUsr + "\" with client \"" + name + "\" denied.")
 						closeConnection()
@@ -154,7 +183,8 @@ def clientThread(client, name):
 					if checkAuth(attemptedUsr, attemptedPwd, randomAuth, False):
 						loggedIn = True
 						send("authRes|true")
-						cnsl("User successfully logged in with usr/pwd/rng: " + attemptedUsr + "/" + attemptedPwd + "/" + randomAuth)
+						cnsl(
+							"User successfully logged in with usr/pwd/rng: " + attemptedUsr + "/" + attemptedPwd + "/" + randomAuth)
 					else:
 						loggedIn = False
 						send("authRes|false")
@@ -169,9 +199,10 @@ if __name__ == '__main__':
 		print '-=STOPPING SERVER=-'
 		s.close()
 		sys.exit(0)
+
 	startListen()
 	signal.signal(signal.SIGINT, signal_handler)
-	#thread.start_new_thread(printTime, ())
+	# thread.start_new_thread(printTime, ())
 	while True:
 		conn, addr = s.accept()
 		cnsl("Connected with " + addr[0] + ':' + str(addr[1]))
