@@ -30,3 +30,8 @@ C:\Users\John\Source\Repos\LandOfLiterra\Client - Windows\LandOfLiterra\obj\Debu
 C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\bin\Debug\LandOfLiterra.exe.config
 C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.exe
 C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.pdb
+C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.csprojResolveAssemblyReference.cache
+C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.MainForm.resources
+C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.LogInForm.resources
+C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.Properties.Resources.resources
+C:\Users\johan\Source\Repos\landofliterra\Client - Windows\LandOfLiterra\obj\Debug\LandOfLiterra.csproj.GenerateResource.Cache
