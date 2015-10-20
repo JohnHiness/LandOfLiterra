@@ -41,15 +41,15 @@
             // 
             // boxInput
             // 
-            this.boxInput.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.boxInput.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.boxInput.Location = new System.Drawing.Point(226, 525);
             this.boxInput.Name = "boxInput";
-            this.boxInput.Size = new System.Drawing.Size(302, 20);
+            this.boxInput.Size = new System.Drawing.Size(302, 22);
             this.boxInput.TabIndex = 0;
             // 
             // boxEvent
             // 
-            this.boxEvent.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.boxEvent.Font = new System.Drawing.Font("Nirmala UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.boxEvent.Location = new System.Drawing.Point(226, 69);
             this.boxEvent.Multiline = true;
             this.boxEvent.Name = "boxEvent";
@@ -59,7 +59,6 @@
             // 
             // boxMap
             // 
-            this.boxMap.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.boxMap.Location = new System.Drawing.Point(12, 69);
             this.boxMap.Multiline = true;
             this.boxMap.Name = "boxMap";
@@ -96,7 +95,6 @@
             // 
             // boxInv
             // 
-            this.boxInv.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.boxInv.Location = new System.Drawing.Point(12, 290);
             this.boxInv.Multiline = true;
             this.boxInv.Name = "boxInv";
@@ -124,7 +122,7 @@
             this.boxDev.Size = new System.Drawing.Size(500, 537);
             this.boxDev.TabIndex = 8;
             // 
-            // MainForm
+            // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -138,7 +136,7 @@
             this.Controls.Add(this.boxMap);
             this.Controls.Add(this.boxEvent);
             this.Controls.Add(this.boxInput);
-            this.Name = "MainForm";
+            this.Name = "Form1";
             this.Text = "Land of Literra";
             this.ResumeLayout(false);
             this.PerformLayout();
