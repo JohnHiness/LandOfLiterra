@@ -1,4 +1,3 @@
-__author__ = 'John Hiness'
 import socket
 import thread
 import time
@@ -7,6 +6,10 @@ import string
 import os
 import hashlib
 import random
+import ast
+import signal
+import threading
+__author__ = 'John Hiness'
 
 
 dev = True
@@ -16,7 +19,12 @@ port = 3202
 maximumConnections = 128
 currentConnections = 0
 accountListFilename = "LoT_Accounts.lot"
-# ss = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+userInfoFilename = "LoT_UserInfo.lot"
+users = {}
+
+clients = set()
+clients_lock = threading.Lock()
+
 
 def printTime():
 	while True:
@@ -86,7 +94,20 @@ def checkAuth(username, password, randomString, caseSens=False):
 	return False
 
 
+def getUserInformation(user, writeOver=False):
+	userInfoFile = open(userInfoFilename, 'r').read()
+	userList = ast.literal_eval(userInfoFile)
+	if not userList[user.lower()]:
+		return False
+	if users[user] and not writeOver:
+		return False
+	users[user] = userList[user.lower()]
+
+
 def clientThread(client, name):
+	with clients_lock:
+		clients.add(client)
+
 	def send(text):
 		if dev:
 			cnsl(" >> " + name + ' :' + text)
@@ -95,6 +116,9 @@ def clientThread(client, name):
 	def closeConnection():
 		cnsl("Closing connection with " + name)
 		client.close()
+
+	def outp(text):
+		send("outMain|" + text)
 
 	randomAuth = str(random.random())
 	send("auth|" + randomAuth)
@@ -135,11 +159,18 @@ def clientThread(client, name):
 						loggedIn = False
 						send("authRes|false")
 				break
+			outp("Welcome to the land of Literra!")
+
 	closeConnection()
 
 
 if __name__ == '__main__':
+	def signal_handler(signal, frame):
+		print '-=STOPPING SERVER=-'
+		s.close()
+		sys.exit(0)
 	startListen()
+	signal.signal(signal.SIGINT, signal_handler)
 	#thread.start_new_thread(printTime, ())
 	while True:
 		conn, addr = s.accept()
