@@ -19,6 +19,7 @@ import socket   #for sockets
 import sys  #for exit
 import string
 import time
+import hashlib
 
 try:
     #create an AF_INET, STREAM socket (TCP)
@@ -60,3 +61,22 @@ while True:
 		rline = string.rstrip(rline)
 		rline = string.split(rline)
 		print "Recv: " + ' '.join(rline)
+		line = ' '.join(rline)
+		evnt = line[:line.find("|")]
+		msg = line[line.find("|")+1:]
+		if evnt == "auth":
+			print "-Auth request-"
+			username = raw_input("Username: ")
+			password = raw_input("Password: ")
+			rstring = msg.split("|")
+			print "rstring="+str(rstring)
+			print "password="+password
+			print "passhash="+hashlib.sha256(password).hexdigest()
+			s.send("auth|" + username+"|"+hashlib.sha256(msg+hashlib.sha256(password).hexdigest()).hexdigest() + "\n")
+		if evnt == "authRes":
+			if msg == "true":
+				print "Successfully logged in."
+			elif msg == "false":
+				print "Login failed."
+			else:
+				print "Unknown error: " + msg
