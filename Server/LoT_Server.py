@@ -56,50 +56,33 @@ cnsl("Socket created.")
 def readAccountList():
 	accListFile = open(accountListFilename, 'r').read()
 	accList = []
-	print accListFile
 	count = 0
 	for line in accListFile.split("\n"):
 		count=count+1
-		print "--"+str(count)+"--"
-		print "++"+line
 		if line.find("#") != -1:
 			lineToAdd = line[:line.find("#")]
 		else:
 			lineToAdd = line
-		print lineToAdd
 		if not lineToAdd.find("|") != -1 and lineToAdd:
 			print "ERROR IN ACCOUNTFILE: Line not recognized format: " + line
 			break
 		if not lineToAdd == "":
 			list = lineToAdd.split("|")
-			print "lta: \"" + list[0]+"\""
-			print "pwd: \"" + list[1]+"\""
 			accList.append({"usr":list[0].strip(), "pwd":list[1].strip()})
-		print accList
 	return accList
 
 
 def checkAuth(username, password, randomString, caseSens=False):
-	print "Attempted usr: '" + username +"'"
-	print "Attempted pwd: '" + password + "'"
-	print "Randomstring="+randomString
 	acclist = readAccountList()
 	for acc in acclist:
-		print "Username: '" + acc["usr"] + "'"
-		print "Password: '" + acc["pwd"] + "'"
 		if caseSens:
-			print "Testing '" + username + "' against '" + acc["usr"]
 			if acc["usr"] == username:
-				print "Testing '" + password + "' against '" + hashlib.sha256(randomString + acc["pwd"]).hexdigest() + "'"
 				if hashlib.sha256(randomString + acc["pwd"]).hexdigest() == password:
 					return True
 		else:
-			print "Testing '" + username.lower() + "' against '" + acc["usr"].lower()
 			if acc["usr"].lower() == username.lower():
-				print "Testing '" + password + "' against '" + hashlib.sha256(randomString + acc["pwd"]).hexdigest() + "'"
 				if hashlib.sha256(randomString + acc["pwd"]).hexdigest() == password:
 					return True
-
 	return False
 
 
@@ -136,11 +119,8 @@ def clientThread(client, name):
 				cnsl("<<  " + name + ' :' + line)
 			if not loggedIn:
 				if evnt == "auth":
-					print "emesg: =" + emesg
 					attemptedUsr = emesg[:emesg.find("|")]
 					attemptedPwd = emesg[emesg.find("|")+1:]
-					print attemptedUsr
-					print attemptedPwd
 					if not os.path.exists(accountListFilename):
 						send("popup|We apoplogize. Something has gone terribly wrong with the server and you won't be able to log in right now. Try again later.")
 						print "FATAL ERROR: \"" + accountListFilename + "\"-file NOT FOUND! ALL AUTHORIZATIONS WILL BE AUTOMATICLY DENIED UNTIL FILE IS EXISTING!"
