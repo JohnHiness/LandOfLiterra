@@ -27,6 +27,25 @@ clients = set()
 clients_lock = threading.Lock()
 
 
+class Log(object):
+	def __init__(self):
+		self.io = "## START OF I/O LOG %s ##" % time.time()
+		self.auth = "## START OF AUTH LOG %s ##" % time.time()
+		self.main = "## START OF MAIN LOG %s ##" % time.time()
+
+	def io(self, text):
+		self.io += '[' + time.strftime('%H:%M:%S') + '] ' + text
+
+	def auth(self, text):
+		self.auth += '[' + time.strftime('%H:%M:%S') + '] ' + text
+
+	def main(self, text):
+		self.main += '[' + time.strftime('%H:%M:%S') + '] ' + text
+
+	def saveAll(self):
+		return
+
+
 def printTime():
 	while True:
 		print time.time()
@@ -34,6 +53,7 @@ def printTime():
 
 
 def cnsl(text):
+	Log.main(text)
 	print '[' + time.strftime('%H:%M:%S') + '] ' + text
 
 
@@ -111,6 +131,7 @@ class IOHandler(object):
 		actionID = random.randint(0, 1000)
 		while actionID in self.actionIDs:
 			actionID = random.randint(0, 1000)
+		self.actionIDs.append(actionID)
 		self.actionsToBeDone.append({'id': actionID,
 									 'file': io_file.lower(),
 									 'object': io_object})
@@ -206,7 +227,8 @@ def clientThread(client, name):
 
 	closeConnection()
 
-
+log = Log()
+IOHandler = IOHandler()
 if __name__ == '__main__':
 	def signal_handler(signal, frame):
 		print '-=STOPPING SERVER=-'
