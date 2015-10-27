@@ -20,6 +20,7 @@ maximumConnections = 128
 currentConnections = 0
 accountListFilename = "LoT_Accounts.lot"
 userInfoFilename = "LoT_UserInfo.lot"
+mapFilename = "LoT_DefaultMap.mlot"
 users = {}
 
 clients = set()
@@ -93,19 +94,31 @@ def checkAuth(username, password, randomString, caseSens=False):
 					return True
 	return False
 
-# entities with id's displayed in map
-entities = {0000: {'desc': "air", 'walk': False},
-			0001: {'desc': "grass", 'walk': True},
-			0002: {'desc': "stone", 'walk': True},
-			0003: {'desc': "river", 'walk': False},
-			0005: {'desc': "sea", 'walk': False},
-			0006: {'desc': "wall", 'walk': False},
-			1001: {'desc': "path", 'walk': True},
-			1002: {'desc': "stone path", 'walk': True},
-			1003: {'desc': "grass path", 'walk': True},
-			1004: {'desc': "marble path", 'walk': True},
-			# .... dis gon take a while
-}
+
+class IOHandler(object):
+	actionsToBeDone = []
+	actionIDs = []
+	files = {}
+
+	def __init__(self):
+		self.files = {'map': mapFilename,
+					  'userInfo': userInfoFilename,
+				  	  'accounts': accountListFilename}
+		self.actionsToBeDone = []
+		self.actionIDs = []
+
+	def append(self, io_file, io_object):
+		actionID = random.randint(0, 1000)
+		while actionID in self.actionIDs:
+			actionID = random.randint(0, 1000)
+		self.actionsToBeDone.append({'id': actionID,
+									 'file': io_file.lower(),
+									 'object': io_object})
+		return True
+
+	def read(self, io_file, line=False):
+		return
+
 
 
 def getUserInformation(user, writeOver=False):
