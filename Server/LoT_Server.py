@@ -29,22 +29,107 @@ clients_lock = threading.Lock()
 
 class Log(object):
 	def __init__(self):
-		self.io = "## START OF I/O LOG %s ##" % time.time()
-		self.auth = "## START OF AUTH LOG %s ##" % time.time()
-		self.main = "## START OF MAIN LOG %s ##" % time.time()
+		self.io_log = "## START OF I/O LOG %s ##" % time.time()
+		self.auth_log = "## START OF AUTH LOG %s ##" % time.time()
+		self.main_log = "## START OF MAIN LOG %s ##" % time.time()
 
 	def io(self, text):
-		self.io += '[' + time.strftime('%H:%M:%S') + '] ' + text
+		self.io_log += '[' + time.strftime('%H:%M:%S') + '] ' + text
 
 	def auth(self, text):
-		self.auth += '[' + time.strftime('%H:%M:%S') + '] ' + text
+		self.auth_log += '[' + time.strftime('%H:%M:%S') + '] ' + text
 
 	def main(self, text):
-		self.main += '[' + time.strftime('%H:%M:%S') + '] ' + text
+		self.main_log += '[' + time.strftime('%H:%M:%S') + '] ' + text
 
 	def saveAll(self):
 		return
 
+
+class IOHandler(object):
+	def __init__(self):
+		self.files = {'map': mapFilename,
+					  'userInfo': userInfoFilename,
+				  	  'accounts': accountListFilename}
+		self.actions = {}
+		self.actionIDs = []
+		thread.start_new_thread(self.worker, ())
+
+	def worker(self):
+		while True:
+			try:
+				if not self.actionIDs and not self.actions:
+					break
+				action = self.actions[self.actionIDs.pop(0)]
+				if action['file'] not in self.files:
+					print "ERROR IN I/O: File '%s' not found." % action['file']
+					return False
+				case = action['case']
+				if case == 'read':
+					file = open(action['file'], 'r').readlines()
+					if action['line']:
+						return file[action['line']]
+					else:
+						return '\n'.join(file)
+				elif case == 'append':
+					with open(action['file'], 'a') as file:
+						file.write(action['text'])
+						file.close()
+				elif case == 'removel':
+					file = open(action['file'], 'r').readlines()
+					return file[action['line']]
+				else:
+					print 'ERROR IN I/O: Case "%s" not recognized.' % case
+			except BaseException as exc:
+				print 'ERROR IN I/O: ' + str(exc)
+
+	def workHandler(self, action):
+		actionID = random.randint(0, 1000)
+		while actionID in self.actionIDs:
+			actionID = random.randint(0, 1000)
+		self.actionIDs.append(actionID)
+		self.actions[actionID] = action
+		while not self.actions[actionID]['done']:
+			break
+		results = self.actions[actionID]['returned']
+		del self.actions[actionID]
+		return results
+
+	def append(self, io_file, io_object):
+		return self.workHandler({'done': False,
+								 'file': io_file.lower(),
+								 'case': 'append',
+								 'text': io_object})
+
+	def read(self, io_file, line=False):
+		return self.workHandler({'done': False,
+								 'file': io_file.lower(),
+								 'case': 'read',
+								 'line': line})
+
+	def removel(self, io_file, line):
+		return self.workHandler({'done': False,
+								 'file': io_file.lower(),
+								 'case': 'removel',
+								 'line': line})
+
+
+class Player(object):
+	def __init__(self, username):
+		if not getUserInformation(username.lower()):
+			inv = []
+			hp = 0
+			xp = 0
+			pos = [0, 0]
+			event = 0
+			eventsDone = []
+			equped = []
+		else:
+			inv, hp, xp, pos, event, eventsDone, equiped = getUserInformation(username)
+
+
+log = Log()
+IOHandler = IOHandler()
 
 def printTime():
 	while True:
@@ -53,7 +138,7 @@ def printTime():
 
 
 def cnsl(text):
-	Log.main(text)
+	log.main(text)
 	print '[' + time.strftime('%H:%M:%S') + '] ' + text
 
 
@@ -115,33 +200,6 @@ def checkAuth(username, password, randomString, caseSens=False):
 	return False
 
 
-class IOHandler(object):
-	actionsToBeDone = []
-	actionIDs = []
-	files = {}
-
-	def __init__(self):
-		self.files = {'map': mapFilename,
-					  'userInfo': userInfoFilename,
-				  	  'accounts': accountListFilename}
-		self.actionsToBeDone = []
-		self.actionIDs = []
-
-	def append(self, io_file, io_object):
-		actionID = random.randint(0, 1000)
-		while actionID in self.actionIDs:
-			actionID = random.randint(0, 1000)
-		self.actionIDs.append(actionID)
-		self.actionsToBeDone.append({'id': actionID,
-									 'file': io_file.lower(),
-									 'object': io_object})
-		return True
-
-	def read(self, io_file, line=False):
-		return
-
-
-
 def getUserInformation(user, writeOver=False):
 	userInfoFile = open(userInfoFilename, 'r').read()
 	userList = ast.literal_eval(userInfoFile)
@@ -150,20 +208,6 @@ def getUserInformation(user, writeOver=False):
 	if users[user] and not writeOver:
 		return False
 	users[user] = userList[user.lower()]
-
-
-class Player(object):
-	def __init__(self, username):
-		if not getUserInformation(username.lower()):
-			inv = []
-			hp = 0
-			xp = 0
-			pos = [0, 0]
-			event = 0
-			eventsDone = []
-			equped = []
-		else:
-			inv, hp, xp, pos, event, eventsDone, equiped = getUserInformation(username)
 
 
 def clientThread(client, name):
@@ -227,8 +271,7 @@ def clientThread(client, name):
 
 	closeConnection()
 
-log = Log()
-IOHandler = IOHandler()
+
 if __name__ == '__main__':
 	def signal_handler(signal, frame):
 		print '-=STOPPING SERVER=-'
