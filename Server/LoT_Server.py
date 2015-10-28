@@ -128,8 +128,30 @@ class Player(object):
 			inv, hp, xp, pos, event, eventsDone, equiped = getUserInformation(username)
 
 
+class MapLoader(object):
+	def readMap(self):
+		file = ioHandler.read('map')
+		if not ('<lot>' in file.lower() and '</lot>' in file.lower() and
+				'<map>' in file.lower() and '</map>' in file.lower() and
+				'<map>' in file.lower() and '</map>' in file.lower()):
+			cnsl('CRITICAL ERROR: MAP-FORMAT NOT RECOGNIZED.')
+			cnsl('Make sure the right file is selected.')
+			RuntimeError('ERROR MAP NOT RECOGNIZED')
+			sys.exit(1)
+		nfile = []
+		for line in file.split('\n'):
+			if '#' in line:
+				line = line[:line.find('#')]
+			nfile.append(line)
+		file = '\n'.join(nfile)
+		file_lot = file[file.lower().find('<lot>') + 5, file.lower().find('</lot>')]
+
+	def __init__(self):
+		self.readMap()
+
+
 log = Log()
-IOHandler = IOHandler()
+ioHandler = IOHandler()
 
 def printTime():
 	while True:
