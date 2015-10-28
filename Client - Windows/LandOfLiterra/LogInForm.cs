@@ -63,10 +63,20 @@ namespace LandOfLiterra {
             putOver("Getting server list...");
             string serverList_url = "http://files.landofliterra.com/serverlist";
             writeDev("Getting server list from URL: " + serverList_url);
-            string contents;
-            using (var wc = new System.Net.WebClient())
-                contents = wc.DownloadString(serverList_url);
-            Main.globals.servers = new string[contents.Split('\n').Length][];
+            string contents = "";
+            try {
+                using (var wc = new System.Net.WebClient())
+                    contents = wc.DownloadString(serverList_url);
+            }
+            catch {
+                MessageBox.Show("Failed to get serverlist. Make sure you are connected to the internet, otherwise it maybe the servers are down. Try again later.", "Land of Literra - Not connected to internet", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Environment.Exit(1);
+            }
+            if (contents == "" || contents.IndexOf("%") == -1) {
+                MessageBox.Show("Something went wrong trying to get the serverlist. Either there are noe servers active at the moment, or something is wrong with the main server. Try again later.", "Land of Literra - Servers down", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Environment.Exit(1);
+            }
+            globals.servers = new string[contents.Split('\n').Length][];
             writeDev("#SERVERLIST START#");
             writeDev(contents);
             writeDev("#SERVERLIST END#");
@@ -80,7 +90,7 @@ namespace LandOfLiterra {
                 //boxDev.Text += Environment.NewLine + name;
                 //boxDev.Text += Environment.NewLine + address;
                 //boxDev.Text += Environment.NewLine + port;
-                Main.globals.servers[i] = new string[] { name, address, port };
+                globals.servers[i] = new string[] { name, address, port };
                 //boxDev.Text += Environment.NewLine + "============";
                 //boxDev.Text += Convert.ToString(Main.globals.servers[i][2]);
                 serverList.Items.Add(name);
@@ -118,16 +128,16 @@ namespace LandOfLiterra {
                 return;
             }
             writeDev("Attempting getting information from name in serverList.");
-            writeDev(Main.globals.servers[0][0]);
-            for (int i = 0; i < Main.globals.servers.Count() -1 ; i++) {
+            writeDev(globals.servers[0][0]);
+            for (int i = 0; i < globals.servers.Count() -1 ; i++) {
                 writeDev("object i: " + Convert.ToString(i));
-                writeDev("Count: " + Main.globals.servers.Count());
-                writeDev(Main.globals.servers[1][0]);
-                writeDev("Checking \"" + serverList.Text + "\" against \"" + Main.globals.servers[i][0] + "\"");
-                if (Main.globals.servers[i][0] == serverList.Text) {
-                    writeDev("Found selected name from serverList and aquired address: " + Main.globals.servers[i][1] + ":" + Main.globals.servers[i][2]);
-                    Main.globals.serverAddr = Main.globals.servers[i][1];
-                    Main.globals.serverPort = Convert.ToInt16(Main.globals.servers[i][2]);
+                writeDev("Count: " + globals.servers.Count());
+                writeDev(globals.servers[1][0]);
+                writeDev("Checking \"" + serverList.Text + "\" against \"" + globals.servers[i][0] + "\"");
+                if (globals.servers[i][0] == serverList.Text) {
+                    writeDev("Found selected name from serverList and aquired address: " + globals.servers[i][1] + ":" + globals.servers[i][2]);
+                    globals.serverAddr = globals.servers[i][1];
+                    globals.serverPort = Convert.ToInt16(globals.servers[i][2]);
                     break;
                 } 
             }

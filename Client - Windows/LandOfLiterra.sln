@@ -8,11 +8,14 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		no Internet|Any CPU = no Internet|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D77AD30D-5112-4B90-8DDC-8177DFE601DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D77AD30D-5112-4B90-8DDC-8177DFE601DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D77AD30D-5112-4B90-8DDC-8177DFE601DF}.no Internet|Any CPU.ActiveCfg = no Internet|Any CPU
+		{D77AD30D-5112-4B90-8DDC-8177DFE601DF}.no Internet|Any CPU.Build.0 = no Internet|Any CPU
 		{D77AD30D-5112-4B90-8DDC-8177DFE601DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D77AD30D-5112-4B90-8DDC-8177DFE601DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

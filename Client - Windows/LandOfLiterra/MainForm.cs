@@ -14,10 +14,9 @@ namespace LandOfLiterra {
 
         }
         public MainForm() {
-            // string promptValue = LogIn.ShowDialog("Test", "Test2");
             LogInForm loginForm = new LogInForm();
             loginForm.ShowDialog();
-            if (Main.globals.loggedIn == false) { Application.Exit(); Environment.Exit(1); }
+            if (globals.loggedIn == false) { Application.Exit(); Environment.Exit(1); }
             InitializeComponent();
         }
 
