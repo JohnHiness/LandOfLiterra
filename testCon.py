@@ -1,3 +1,5 @@
+## THIS IS JUST A TMP FILE TO EASILY TRY OUT SOCKET ##
+
 """import socket
 import string
 
