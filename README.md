@@ -15,8 +15,9 @@ The second way of fighting will be simply turnbased. This way, one can have a fa
 
 ###### Map
 Maps will be single files on the servers with the ability to load custom maps into the server. Being the maps are solely on the server, they can be updated and expanded at anytime, and perhaps one day, even with the players logged on and the server running.
-
-Oh and by the way, "literra" means "letters" in latin, - "letters" as in characters, not messages.
+###### Misc 
+"literra" means "letters" in latin, - "letters" as in characters, not messages.
+"LoT" is short for "Land of Literra", because I refuse to name it "LoL". Deal with it.
 
 ## License
 
