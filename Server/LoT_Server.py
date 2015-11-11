@@ -22,6 +22,7 @@ accountListFilename = "LoT_Accounts.lot"
 userInfoFilename = "LoT_UserInfo.lot"
 mapFilename = "LoT_DefaultMap.mlot"
 users = {}
+clientInstances = {}
 
 clients = set()
 clients_lock = threading.Lock()
@@ -129,6 +130,19 @@ class Player(object):
 
 
 class MapLoader(object):
+	def __init__(self):
+		self.readMap()
+		self.graphMap()
+		self.loadEnd()
+
+	def graphMap(self):
+		if not self.file_map:
+			return False
+		rawMap = self.file_map
+
+	def loadEnd(self):
+
+
 	def readMap(self):
 		file = ioHandler.read('map')
 		if not ('<lot>' in file.lower() and '</lot>' in file.lower() and
@@ -144,14 +158,94 @@ class MapLoader(object):
 				line = line[:line.find('#')]
 			nfile.append(line)
 		file = '\n'.join(nfile)
-		file_lot = file[file.lower().find('<lot>') + 5, file.lower().find('</lot>')]
+		self.file_lot = file[file.lower().find('<lot>') + 5: file.lower().find('</lot>')]
+		self.file_map = self.file_lot[file.lower().find('<map>') + 5: file.lower().find('</map>')]
+		self.file_ent = self.file_lot[file.lower().find('<entities>') + 10: file.lower().find('</entities>')]
+		if not self.file_map:
+			cnsl("CRITICAL ERROR: MAP NOT FOUND.")
+			RuntimeError('ERROR MAP NOT FOUND')
+		if not self.file_ent:
+			cnsl("CRITICAL ERROR: ENTITIES NOT FOUND.")
+			RuntimeError('ERROR ENTITIES NOT FOUND')
+		if not self.file_lot:
+			cnsl("CRITICAL ERROR: MAPFILE NOT RECOGNIZED.")
+			RuntimeError('ERROR MAPFILE NOT RECOGNIZED')
+		if not (self.file_lot or self.file_map or self.file_ent):
+			sys.exit(1)
 
-	def __init__(self):
-		self.readMap()
+
+class Client(object):
+	def __init__(self, client, name):
+		thread.start_new_thread(self.clientThread, ())
+		self.client = client
+		self.name = name
+
+	def send(self, text):
+		if dev:
+			cnsl(" >> " + self.name + ' :' + text)
+		self.client.send(text + '\n')
+
+	def closeConnection(self):
+			cnsl("Closing connection with " + self.name)
+			self.client.close()
+
+	def outp(self, text):
+				self.send("outMain|" + text)
+
+	def clientThread(self):
+		name = self.name
+		send = self.send
+		outp = self.outp
+		with clients_lock:
+			clients.add(self.client)
+
+		randomAuth = str(random.random())
+		send("auth|" + randomAuth)
+		loggedIn = False
+		readbuffer = ''
+
+		while True:
+			try:
+				readbuffer = readbuffer + self.client.recv(2048)
+			except BaseException as err:
+				cnsl("Error recieving from " + name + ' : ' + str(err))
+				break
+			temp = string.split(readbuffer, "\n")
+			readbuffer = temp.pop()
+			for rline in temp:
+				rline = string.rstrip(rline)
+				rline = string.split(rline)
+				line = ' '.join(rline)
+				evnt = line[:line.find("|")]
+				emesg = line[line.find("|") + 1:]
+				if dev:
+					cnsl("<<  " + name + ' :' + line)
+				if not loggedIn:
+					if evnt == "auth":
+						attemptedUsr = emesg[:emesg.find("|")]
+						attemptedPwd = emesg[emesg.find("|") + 1:]
+						if not os.path.exists(accountListFilename):
+							send(
+								"popup|We apoplogize. Something has gone terribly wrong with the server and you won't be able to log in right now. Try again later.")
+							print "FATAL ERROR: \"" + accountListFilename + "\"-file NOT FOUND! ALL AUTHORIZATIONS WILL BE AUTOMATICLY DENIED UNTIL FILE IS EXISTING!"
+							cnsl("Attempted login with user \"" + attemptedUsr + "\" with client \"" + name + "\" denied.")
+							self.closeConnection()
+							break
+						if checkAuth(attemptedUsr, attemptedPwd, randomAuth, False):
+							loggedIn = True
+							send("authRes|true")
+							cnsl(
+								"User successfully logged in with usr/pwd/rng: " + attemptedUsr + "/" + attemptedPwd + "/" + randomAuth)
+						else:
+							loggedIn = False
+							send("authRes|false")
+					break
+				outp("Welcome to the land of Literra!")
 
 
 log = Log()
 ioHandler = IOHandler()
+
 
 def printTime():
 	while True:
@@ -232,68 +326,6 @@ def getUserInformation(user, writeOver=False):
 	users[user] = userList[user.lower()]
 
 
-def clientThread(client, name):
-	with clients_lock:
-		clients.add(client)
-
-	def send(text):
-		if dev:
-			cnsl(" >> " + name + ' :' + text)
-		client.send(text + '\n')
-
-	def closeConnection():
-		cnsl("Closing connection with " + name)
-		client.close()
-
-	def outp(text):
-		send("outMain|" + text)
-
-	randomAuth = str(random.random())
-	send("auth|" + randomAuth)
-	loggedIn = False
-	readbuffer = ''
-
-	while True:
-		try:
-			readbuffer = readbuffer + client.recv(2048)
-		except BaseException as err:
-			cnsl("Error recieving from " + name + ' : ' + str(err))
-			break
-		temp = string.split(readbuffer, "\n")
-		readbuffer = temp.pop()
-		for rline in temp:
-			rline = string.rstrip(rline)
-			rline = string.split(rline)
-			line = ' '.join(rline)
-			evnt = line[:line.find("|")]
-			emesg = line[line.find("|") + 1:]
-			if dev:
-				cnsl("<<  " + name + ' :' + line)
-			if not loggedIn:
-				if evnt == "auth":
-					attemptedUsr = emesg[:emesg.find("|")]
-					attemptedPwd = emesg[emesg.find("|") + 1:]
-					if not os.path.exists(accountListFilename):
-						send(
-							"popup|We apoplogize. Something has gone terribly wrong with the server and you won't be able to log in right now. Try again later.")
-						print "FATAL ERROR: \"" + accountListFilename + "\"-file NOT FOUND! ALL AUTHORIZATIONS WILL BE AUTOMATICLY DENIED UNTIL FILE IS EXISTING!"
-						cnsl("Attempted login with user \"" + attemptedUsr + "\" with client \"" + name + "\" denied.")
-						closeConnection()
-						break
-					if checkAuth(attemptedUsr, attemptedPwd, randomAuth, False):
-						loggedIn = True
-						send("authRes|true")
-						cnsl(
-							"User successfully logged in with usr/pwd/rng: " + attemptedUsr + "/" + attemptedPwd + "/" + randomAuth)
-					else:
-						loggedIn = False
-						send("authRes|false")
-				break
-			outp("Welcome to the land of Literra!")
-
-	closeConnection()
-
-
 if __name__ == '__main__':
 	def signal_handler(signal, frame):
 		print '-=STOPPING SERVER=-'
@@ -307,5 +339,5 @@ if __name__ == '__main__':
 		conn, addr = s.accept()
 		cnsl("Connected with " + addr[0] + ':' + str(addr[1]))
 		clName = addr[0] + ':' + str(addr[1])
-		thread.start_new_thread(clientThread, (conn, clName))
+		clientInstances[clName] = Client(conn, clName)
 	s.close()
